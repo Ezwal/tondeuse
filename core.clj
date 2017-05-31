@@ -1,8 +1,8 @@
 (ns tondeuse.core
   (:gen-class))
 
-(def regex-map #"(\d) (\d)")
-(def regex-tondeuse #"(\d) (\d) (\w)")
+(def regex-map #"(\d+) (\d+)")
+(def regex-tondeuse #"(\d+) (\d+) (\w)")
 (def Orientation [{:dir "N" :d [0 1]}
                   {:dir "E" :d [1 0]} 
                   {:dir "S" :d [0 -1]}
@@ -51,7 +51,7 @@
        (rotate tondeuse-info -1))))
 
 (defn str-tondeuse-info-to-vector
-  "parse a string into "
+  "parse a string into a vec"
   [s]
   (let [parsed-s (re-find regex-tondeuse s)
         [_ xt yt ot] parsed-s]
@@ -72,16 +72,12 @@
 
 (defn size-map!
   "init la carte et renvoie le reste des args non utilisé"
-  ([lines]
-   ; damn ugly I know to be moved to another func
+  [lines]
   (let [parsedSize (re-find regex-map (first lines))
         [width length] (rest parsedSize)]
    (def x (Integer/parseInt width))
    (def y (Integer/parseInt length))
   (rest lines)))
-  ([a b]
-   (def x a)
-   (def y b)))
 
 (defn -main
   "mange le fichier d'input et calcul le mouvement des tondeuses"
