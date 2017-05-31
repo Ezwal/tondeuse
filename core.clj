@@ -1,6 +1,8 @@
 (ns tondeuse.core
   (:gen-class))
 
+(def regex-map #"(\d) (\d)")
+(def regex-tondeuse #"(\d) (\d) (\w)")
 (def Orientation [{:dir "N" :d [0 1]}
                   {:dir "E" :d [1 0]} 
                   {:dir "S" :d [0 -1]}
@@ -43,17 +45,16 @@
   "si donne vector avec xyo et nouvel ordre alors replace la tondeuse"
   [tondeuse-info ordre]
    ; damn ugly I know
-  (let [[x y o] tondeuse-info]
     (if (= ordre "A")
       (advance tondeuse-info) 
      (if (= ordre "D")
        (rotate tondeuse-info 1)
-       (rotate tondeuse-info -1)))))
+       (rotate tondeuse-info -1))))
 
 (defn str-tondeuse-info-to-vector
   "parse a string into "
   [s]
-  (let [parsed-s (re-find #"(\d) (\d) (\w)" s)
+  (let [parsed-s (re-find regex-tondeuse s)
         [_ xt yt ot] parsed-s]
     (conj [] (Integer/parseInt xt) (Integer/parseInt yt) ot)))
 
@@ -74,7 +75,7 @@
   "init la carte et renvoie le reste des args non utilisé"
   ([lines]
    ; damn ugly I know to be moved to another func
-  (let [parsedSize (re-find #"(\d) (\d)" (first lines))
+  (let [parsedSize (re-find regex-map (first lines))
         [width length] (rest parsedSize)]
    (def x (Integer/parseInt width))
    (def y (Integer/parseInt length))
@@ -85,8 +86,8 @@
 
 (defn -main
   "mange le fichier d'input et calcul le mouvement des tondeuses"
-  [& args]
-  (-> (slurp "./input.txt")
+  [path]
+  (-> (slurp path)
       (clojure.string/split-lines)
       (size-map!)
       (consume-tondeuse)))
