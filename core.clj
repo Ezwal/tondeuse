@@ -44,7 +44,6 @@
 (defn move
   "si donne vector avec xyo et nouvel ordre alors replace la tondeuse"
   [tondeuse-info ordre]
-   ; damn ugly I know
     (if (= ordre "A")
       (advance tondeuse-info) 
      (if (= ordre "D")
@@ -68,7 +67,7 @@
   [lines]
   (do 
     (println (parse-tondeuse (take 2 lines)))
-    (if (empty? (nnext lines))
+    (if (not (empty? (nnext lines)))
       (consume-tondeuse (nnext lines)))))
 
 (defn size-map!
