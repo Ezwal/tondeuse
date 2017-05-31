@@ -29,12 +29,12 @@
 
 (defn rotate
   "change orientation"
-  [tondeuse-info clockwise]
+  [tondeuse-info spin]
   (let [inf-or (flatten (repeat 2 Orientation))
         curOrient (last tondeuse-info)]
     (->> (drop-while 
            #(not= curOrient (:dir %)) 
-                (if (pos? clockwise) 
+                (if (= spin :clockwise) 
                   inf-or
                   (reverse inf-or)))
          (second)
@@ -47,8 +47,13 @@
     (if (= ordre "A")
       (advance tondeuse-info) 
      (if (= ordre "D")
-       (rotate tondeuse-info 1)
-       (rotate tondeuse-info -1))))
+       (rotate tondeuse-info :clockwise)
+       (rotate tondeuse-info :counter))))
+
+(defn str-tondeuse-into-hash
+  "parse a string into an hash"
+  [s]
+  (print "TODO"))
 
 (defn str-tondeuse-info-to-vector
   "parse a string into a vec"
@@ -68,7 +73,8 @@
   (do 
     (println (parse-tondeuse (take 2 lines)))
     (if (not (empty? (nnext lines)))
-      (consume-tondeuse (nnext lines)))))
+      (consume-tondeuse (nnext lines))
+      "Done")))
 
 (defn size-map!
   "init la carte et renvoie le reste des args non utilisé"
